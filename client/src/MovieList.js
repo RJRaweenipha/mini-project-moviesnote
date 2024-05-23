@@ -36,6 +36,7 @@ function MovieList() {
     setOpen(false);
     setMovieToDelete(null);
   };
+
   const style = {
     position: 'absolute',
     top: '50%',
@@ -48,20 +49,16 @@ function MovieList() {
     p: 4,
   };
 
-  const deleteMovie = () => {
+  const deleteMovie = async () => {
     if (movieToDelete) {
-      fetch(`/movies/${movieToDelete.id}`, {
-        method: 'DELETE',
-      })
-        .then(response => {
-          console.log("response", response);
-          setMoviesData(moviesData.filter(movie => movie.id !== movieToDelete.id));
-          handleClose();
-        })
-        .catch(error => {
-          console.error('Error deleting movie:', error);
-          handleClose();
-        });
+      try {
+        await axios.delete(`http://localhost:3001/api/movies/${movieToDelete.id}`);
+        setMoviesData(moviesData.filter(movie => movie.id !== movieToDelete.id));
+        handleClose();
+      } catch (error) {
+        console.error('Error deleting movie:', error);
+        handleClose();
+      }
     }
   };
 
